@@ -28,7 +28,7 @@ using System.Reflection;
 namespace UnlimitedOutsideConnections 
 {
 
-    public class RedirectCallsState
+    public struct RedirectCallsState
     {
         public byte a, b, c, d, e;
         public ulong f;
