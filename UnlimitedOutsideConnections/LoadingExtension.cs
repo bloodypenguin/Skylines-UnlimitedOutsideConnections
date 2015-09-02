@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using ColossalFramework.Plugins;
 using ICities;
+using UnityEngine;
 
 namespace UnlimitedOutsideConnections
 {
@@ -12,16 +15,41 @@ namespace UnlimitedOutsideConnections
             loadMode = mode;
             try
             {
-                BuildingManagerDetour.Deploy(); //TODO(earalov): do it for game mode only if Cross The Line or 81 tiles is enabled
-                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+                if (mode == LoadMode.LoadMap || mode == LoadMode.NewMap)
                 {
-                    OutsideConnectionAIDetour.Deploy();
+                    BuildingManagerDetour.Deploy();
+                }
+                else if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+                {
+                    if (IsBuildAnywherePluginActive())
+                    {
+                        BuildingManagerDetour.Deploy();
+                        OutsideConnectionAIDetour.Deploy();
+                    }
+
                 }
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+                Debug.LogException(e);
             }
+        }
+
+        private static bool IsBuildAnywherePluginActive()
+        {
+            var plugins = PluginManager.instance.GetPluginsInfo();
+            foreach (var name in from plugin in plugins.Where(p => p.isEnabled)
+                                 select plugin.GetInstances<IUserMod>()
+                                     into instances
+                                     where instances.Any()
+                                     select instances[0].Name into name
+                                     where name == "CrossTheLine" || name == "81 Tile Unlock"
+                                     select name)
+            {
+                Debug.Log(String.Format("UnlimitedOutsideConnections: {0} is active", name));
+                return true;
+            }
+            return false;
         }
 
         public override void OnLevelUnloading()
@@ -32,7 +60,7 @@ namespace UnlimitedOutsideConnections
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+                Debug.LogException(e);
             }
 
             try
@@ -44,7 +72,7 @@ namespace UnlimitedOutsideConnections
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+                Debug.LogException(e);
             }
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace UnlimitedOutsideConnections
 {
-    public class OutsideConnectionAIDetour  : BuildingAI
+    public class OutsideConnectionAIDetour : BuildingAI
     {
 
         private static bool _deployed;
@@ -14,19 +14,24 @@ namespace UnlimitedOutsideConnections
         private static MethodInfo _originalInfo;
         private static MethodInfo _detourInfo;
 
-        private static MethodInfo _createConnectionLinesInfo = typeof(TransportStationAI).GetMethod("CreateConnectionLines",
-            BindingFlags.Instance | BindingFlags.NonPublic);
+        private static MethodInfo _createConnectionLinesInfo;
 
         public static void Deploy()
         {
             if (_deployed) return;
+            if (_createConnectionLinesInfo == null)
+            {
+                _createConnectionLinesInfo = typeof(TransportStationAI).GetMethod("CreateConnectionLines",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+
             if (_originalInfo == null)
             {
-                _originalInfo = typeof (OutsideConnectionAI).GetMethod("CreateBuilding");
+                _originalInfo = typeof(OutsideConnectionAI).GetMethod("CreateBuilding");
             }
             if (_detourInfo == null)
             {
-                _detourInfo = typeof (OutsideConnectionAIDetour).GetMethod("CreateBuilding");
+                _detourInfo = typeof(OutsideConnectionAIDetour).GetMethod("CreateBuilding");
             }
             _state = RedirectionHelper.RedirectCalls(_originalInfo, _detourInfo);
             _deployed = true;
@@ -34,7 +39,7 @@ namespace UnlimitedOutsideConnections
 
         public static void Revert()
         {
-            if (_deployed) return;
+            if (!_deployed) return;
             if (_originalInfo != null && _detourInfo != null)
             {
                 RedirectionHelper.RevertRedirect(_originalInfo, _state);
@@ -83,7 +88,7 @@ namespace UnlimitedOutsideConnections
                 }
                 var args = new object[] { id, instance.m_buildings.m_buffer[id], buildingID, instance.m_buildings.m_buffer[buildingID], gateIndex };
                 _createConnectionLinesInfo.Invoke(ai, args);
-                UnityEngine.Debug.Log("Outisde connection line for building " + id + "was created");
+
             }
         }
     }

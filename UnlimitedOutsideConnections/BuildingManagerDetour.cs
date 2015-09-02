@@ -31,7 +31,7 @@ namespace UnlimitedOutsideConnections
 
         public static void Revert()
         {
-            if (_deployed) return;
+            if (!_deployed) return;
             if (_originalPtr != IntPtr.Zero && _detourPtr != IntPtr.Zero)
             {
                 RedirectionHelper.RevertJumpTo(_originalPtr, _state);
