@@ -55,9 +55,19 @@ namespace UnlimitedOutsideConnections
             data.m_flags |= Building.Flags.Active;
             Singleton<BuildingManager>.instance.AddOutsideConnection(buildingID);
 
-            //then goes additional code
+            SimulationManager.instance.AddAction(() =>
+            {
+                CreateOutsideConnectionLines(buildingID);
+            });
+        }
+
+        private static void CreateOutsideConnectionLines(ushort buildingID)
+        {
+
+            UnityEngine.Debug.Log("UnlimitedOutsideConnections - CreateOutsideConnectionLines");
             var instance = BuildingManager.instance;
-            var serviceBuildings = instance.GetServiceBuildings(this.m_info.m_class.m_service).ToArray().Where(
+            var data = instance.m_buildings.m_buffer[buildingID];
+            var serviceBuildings = instance.GetServiceBuildings(data.Info.m_class.m_service).ToArray().Where(
                 id =>
                 {
                     var building = instance.m_buildings.m_buffer[id];
@@ -65,7 +75,7 @@ namespace UnlimitedOutsideConnections
                     {
                         return false;
                     }
-                    return building.Info.m_class.m_subService == this.m_info.m_class.m_subService;
+                    return building.Info.m_class.m_subService == data.Info.m_class.m_subService;
                 });
             foreach (var id in serviceBuildings)
             {
@@ -74,21 +84,19 @@ namespace UnlimitedOutsideConnections
                 {
                     continue;
                 }
-                UnityEngine.Debug.Log("Creating outisde connection line for building " + id);
+                UnityEngine.Debug.Log("UnlimitedOutsideConnections - Creating outisde connection line for building " + id);
                 var b = 1;
                 var num1 = 1;
                 var gateIndex = 0;
-                var num2 = 1;
                 if (ai.m_spawnPoints != null && ai.m_spawnPoints.Length != 0)
                 {
-                    var randomizer = new Randomizer((int)id);
+                    var randomizer = new Randomizer((int) id);
                     num1 = ai.m_spawnPoints.Length;
-                    gateIndex = randomizer.Int32((uint)num1);
-                    num2 = Mathf.Max(1, num1 / Mathf.Max(1, b));
+                    gateIndex = randomizer.Int32((uint) num1);
                 }
-                var args = new object[] { id, instance.m_buildings.m_buffer[id], buildingID, instance.m_buildings.m_buffer[buildingID], gateIndex };
+                data.m_flags |= Building.Flags.IncomingOutgoing;
+                var args = new object[] {id, instance.m_buildings.m_buffer[id], buildingID, data, gateIndex};
                 _createConnectionLinesInfo.Invoke(ai, args);
-
             }
         }
     }

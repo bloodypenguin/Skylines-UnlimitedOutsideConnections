@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using ColossalFramework;
+using ColossalFramework.Math;
 using ColossalFramework.Plugins;
 using ICities;
 using UnityEngine;
@@ -24,10 +27,16 @@ namespace UnlimitedOutsideConnections
                     if (IsBuildAnywherePluginActive())
                     {
                         BuildingManagerDetour.Deploy();
-                        OutsideConnectionAIDetour.Deploy();
+                        //TODO(earalov): do we need that detour at all?
+                        //OutsideConnectionAIDetour.Deploy();
                     }
-
                 }
+                GameObject gameObjectWithTag = GameObject.FindGameObjectWithTag("MainCamera");
+                if (!((gameObjectWithTag != null)))
+                    return;
+                var cameraController = gameObjectWithTag.GetComponent<CameraController>();
+                cameraController.m_unlimitedCamera = true;
+
             }
             catch (Exception e)
             {
@@ -63,17 +72,18 @@ namespace UnlimitedOutsideConnections
                 Debug.LogException(e);
             }
 
-            try
-            {
-                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
-                {
-                    OutsideConnectionAIDetour.Revert();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
+//TODO(earalov): do we need that detour at all?
+//            try
+//            {
+//                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+//                {
+//                    OutsideConnectionAIDetour.Revert();
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                Debug.LogException(e);
+//            }
         }
     }
 }
