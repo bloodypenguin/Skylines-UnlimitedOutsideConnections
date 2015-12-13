@@ -91,8 +91,7 @@ namespace UnlimitedOutsideConnections
 
             Debug.Log("UnlimitedOutsideConnections - CreateOutsideConnectionLines");
             var instance = BuildingManager.instance;
-            var data = instance.m_buildings.m_buffer[buildingID];
-            var serviceBuildings = FindServiceBuildings(data);
+            var serviceBuildings = FindServiceBuildings(instance.m_buildings.m_buffer[buildingID]);
             foreach (var id in serviceBuildings)
             {
                 var ai = instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
@@ -107,11 +106,11 @@ namespace UnlimitedOutsideConnections
                     var randomizer = new Randomizer(id);
                     gateIndex = randomizer.Int32((uint)ai.m_spawnPoints.Length);
                 }
-                data.m_flags |= Building.Flags.IncomingOutgoing;
-                var args = new object[] { id, instance.m_buildings.m_buffer[id], buildingID, data, gateIndex };
+                instance.m_buildings.m_buffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
+                var args = new object[] { id, instance.m_buildings.m_buffer[id], buildingID, instance.m_buildings.m_buffer[buildingID], gateIndex };
                 _createConnectionLinesInfo.Invoke(ai, args);
                 instance.m_buildings.m_buffer[id] = (Building) args[1];
-                data = (Building) args[3];
+                instance.m_buildings.m_buffer[buildingID] = (Building) args[3];
                 OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], true);
             }
         }
