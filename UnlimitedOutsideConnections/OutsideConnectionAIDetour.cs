@@ -112,7 +112,7 @@ namespace UnlimitedOutsideConnections
                 _createConnectionLinesInfo.Invoke(ai, args);
                 instance.m_buildings.m_buffer[id] = (Building) args[1];
                 data = (Building) args[3];
-                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id]);
+                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], true);
             }
         }
 
@@ -160,16 +160,17 @@ namespace UnlimitedOutsideConnections
                 _releaseVehiclesInfo.Invoke(ai, args);
                 instance.m_buildings.m_buffer[id] = (Building) args[1];
 
-                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id]);
+                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], true);
+                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], false);
             }
         }
 
 
 
-        private static void RemoveVehicles(ref Building data)
+        private static void RemoveVehicles(ref Building data, bool ownVehicles)
         {
             VehicleManager instance = Singleton<VehicleManager>.instance;
-            ushort vehicleID = data.m_ownVehicles;
+            ushort vehicleID = ownVehicles? data.m_ownVehicles: data.m_guestVehicles;
             int num = 0;
             while ((int)vehicleID != 0)
             {
@@ -180,7 +181,14 @@ namespace UnlimitedOutsideConnections
                         info.m_class.m_subService == data.Info.m_class.m_subService)
                     {
                         info.m_vehicleAI.SetTarget(vehicleID, ref instance.m_vehicles.m_buffer[(int)vehicleID], (ushort)0);
-                        data.RemoveOwnVehicle(vehicleID, ref instance.m_vehicles.m_buffer[(int)vehicleID]);
+                        if (ownVehicles)
+                        {
+                            data.RemoveOwnVehicle(vehicleID, ref instance.m_vehicles.m_buffer[(int) vehicleID]);
+                        }
+                        else
+                        {
+                            data.RemoveGuestVehicle(vehicleID, ref instance.m_vehicles.m_buffer[(int)vehicleID]);
+                        }
                     }
 
                 }
