@@ -27,8 +27,7 @@ namespace UnlimitedOutsideConnections
                     if (IsBuildAnywherePluginActive())
                     {
                         BuildingManagerDetour.Deploy();
-                        //TODO(earalov): do we need that detour at all?
-                        //OutsideConnectionAIDetour.Deploy();
+                        OutsideConnectionAIDetour.Deploy();
                     }
                 }
                 GameObject gameObjectWithTag = GameObject.FindGameObjectWithTag("MainCamera");
@@ -72,18 +71,17 @@ namespace UnlimitedOutsideConnections
                 Debug.LogException(e);
             }
 
-//TODO(earalov): do we need that detour at all?
-//            try
-//            {
-//                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
-//                {
-//                    OutsideConnectionAIDetour.Revert();
-//                }
-//            }
-//            catch (Exception e)
-//            {
-//                Debug.LogException(e);
-//            }
+            try
+            {
+                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+                {
+                    OutsideConnectionAIDetour.Revert();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 }
