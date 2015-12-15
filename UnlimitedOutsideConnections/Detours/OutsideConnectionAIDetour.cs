@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ColossalFramework;
 using ColossalFramework.Math;
 using UnityEngine;
+using UnlimitedOutsideConnections.Redirection;
 
-namespace UnlimitedOutsideConnections
+namespace UnlimitedOutsideConnections.Detours
 {
     public class OutsideConnectionAIDetour : BuildingAI
     {
-
         private static bool _deployed;
         private static RedirectCallsState _state1;
         private static MethodInfo _originalInfo1;
@@ -25,7 +24,10 @@ namespace UnlimitedOutsideConnections
 
         public static void Deploy()
         {
-            if (_deployed) return;
+            if (_deployed)
+            {
+                return;
+            }
             if (_createConnectionLinesInfo == null)
             {
                 _createConnectionLinesInfo = typeof(TransportStationAI).GetMethod("CreateConnectionLines",
@@ -37,37 +39,36 @@ namespace UnlimitedOutsideConnections
                     BindingFlags.Instance | BindingFlags.NonPublic);
             }
 
-            if (_originalInfo1 == null)
-            {
-                _originalInfo1 = typeof(OutsideConnectionAI).GetMethod("CreateBuilding");
-            }
             if (_detourInfo1 == null)
             {
                 _detourInfo1 = typeof(OutsideConnectionAIDetour).GetMethod("CreateBuilding");
             }
-            _state1 = RedirectionHelper.RedirectCalls(_originalInfo1, _detourInfo1);
-            if (_originalInfo2 == null)
-            {
-                _originalInfo2 = typeof(OutsideConnectionAI).GetMethod("ReleaseBuilding");
-            }
+            var tuple1 = RedirectionUtil.RedirectMethod(typeof(OutsideConnectionAI), _detourInfo1);
+            _originalInfo1 = tuple1.First;
+            _state1 = tuple1.Second;
             if (_detourInfo2 == null)
             {
                 _detourInfo2 = typeof(OutsideConnectionAIDetour).GetMethod("ReleaseBuilding");
             }
-            _state1 = RedirectionHelper.RedirectCalls(_originalInfo2, _detourInfo2);
+            var tuple2 = RedirectionUtil.RedirectMethod(typeof(OutsideConnectionAI), _detourInfo2);
+            _originalInfo2 = tuple2.First;
+            _state2 = tuple2.Second;
             _deployed = true;
         }
 
         public static void Revert()
         {
-            if (!_deployed) return;
+            if (!_deployed)
+            {
+                return;
+            }
             if (_originalInfo1 != null && _detourInfo1 != null)
             {
                 RedirectionHelper.RevertRedirect(_originalInfo1, _state1);
             }
             if (_originalInfo2 != null && _detourInfo2 != null)
             {
-                RedirectionHelper.RevertRedirect(_originalInfo1, _state2);
+                RedirectionHelper.RevertRedirect(_originalInfo2, _state2);
             }
             _deployed = false;
         }
@@ -88,8 +89,7 @@ namespace UnlimitedOutsideConnections
 
         private static void CreateOutsideConnectionLines(ushort buildingID)
         {
-
-            Debug.Log("UnlimitedOutsideConnections - CreateOutsideConnectionLines");
+            Debug.Log($"UnlimitedOutsideConnections - CreateOutsideConnectionLines. buildingID={buildingID}");
             var instance = BuildingManager.instance;
             var serviceBuildings = FindServiceBuildings(instance.m_buildings.m_buffer[buildingID]);
             foreach (var id in serviceBuildings)
@@ -99,7 +99,6 @@ namespace UnlimitedOutsideConnections
                 {
                     continue;
                 }
-                Debug.Log("UnlimitedOutsideConnections - Creating outside connection line for building " + id);
                 var gateIndex = 0;
                 if (ai.m_spawnPoints != null && ai.m_spawnPoints.Length != 0)
                 {
@@ -139,6 +138,7 @@ namespace UnlimitedOutsideConnections
 
         public override void ReleaseBuilding(ushort buildingID, ref Building data)
         {
+            Debug.Log($"UnlimitedOutsideConnections - ReleaseBuilding. buildingID={buildingID}");
             OutsideConnectionAI.RemoveConnectionOffers(buildingID, ref data, TransferManager.TransferReason.None);
             var instance = Singleton<BuildingManager>.instance;
             instance.RemoveOutsideConnection(buildingID);
@@ -151,7 +151,6 @@ namespace UnlimitedOutsideConnections
                 {
                     continue;
                 }
-                Debug.Log("UnlimitedOutsideConnections - Releasing vehicles of building " + id);
                 ReleaseVehicles(ai, id, ref instance.m_buildings.m_buffer[id]);
             }
         }
@@ -159,6 +158,7 @@ namespace UnlimitedOutsideConnections
         private static void CreateConnectionLines(TransportStationAI ai, ushort buildingID, ref Building data, ushort targetID,
             ref Building target, int gateIndex)
         {
+            Debug.Log($"UnlimitedOutsideConnections - Creating outside connection line for transport station {buildingID}");
             var args = new object[] { buildingID, data, targetID, target, gateIndex };
             _createConnectionLinesInfo.Invoke(ai, args);
             data = (Building)args[1];
@@ -167,6 +167,7 @@ namespace UnlimitedOutsideConnections
 
         private static void ReleaseVehicles(TransportStationAI ai, ushort buildingID, ref Building data)
         {
+            Debug.Log($"UnlimitedOutsideConnections - Releasing vehicles of transport station {buildingID}");
             var args = new object[] { buildingID, data };
             _releaseVehiclesInfo.Invoke(ai, args);
             data = (Building)args[1];

@@ -48,13 +48,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildingManagerDetour.cs" />
-    <Compile Include="RedirectionHelper.cs" />
+    <Compile Include="Detours\BuildingManagerDetour.cs" />
+    <Compile Include="Redirection\RedirectionHelper.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
-    <Compile Include="OutsideConnectionAIDetour.cs" />
+    <Compile Include="Detours\OutsideConnectionAIDetour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Redirection\RedirectionUtil.cs" />
+    <Compile Include="Redirection\Tuple.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "%25LOCALAPPDATA%25\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)"

@@ -25,7 +25,7 @@ THE SOFTWARE.
 using System;
 using System.Reflection;
 
-namespace UnlimitedOutsideConnections 
+namespace UnlimitedOutsideConnections.Redirection 
 {
 
     public struct RedirectCallsState

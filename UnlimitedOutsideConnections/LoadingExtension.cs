@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using ColossalFramework;
-using ColossalFramework.Math;
-using ColossalFramework.Plugins;
 using ICities;
 using UnityEngine;
+using UnlimitedOutsideConnections.Detours;
 
 namespace UnlimitedOutsideConnections
 {
     public class LoadingExtension : LoadingExtensionBase
     {
-        private static LoadMode loadMode;
+        private static LoadMode _loadMode;
 
         public override void OnLevelLoaded(LoadMode mode)
         {
-            loadMode = mode;
+            _loadMode = mode;
             try
             {
                 if (mode == LoadMode.LoadMap || mode == LoadMode.NewMap)
                 {
                     BuildingManagerDetour.Deploy();
                 }
-                else if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+                else if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
                     if (IsBuildAnywherePluginActive())
                     {
@@ -45,19 +42,14 @@ namespace UnlimitedOutsideConnections
 
         private static bool IsBuildAnywherePluginActive()
         {
-            var plugins = PluginManager.instance.GetPluginsInfo();
-            foreach (var name in from plugin in plugins.Where(p => p.isEnabled)
-                                 select plugin.GetInstances<IUserMod>()
-                                     into instances
-                                     where instances.Any()
-                                     select instances[0].Name into name
-                                     where name == "CrossTheLine" || name == "81 Tile Unlock"
-                                     select name)
+            string[] buildAnywherePlugins = { "CrossTheLine", "81 Tile Unlock", "81 Tiles(Fixed for C:S 1.2 +)" };
+            var result = false;
+            foreach (var name in buildAnywherePlugins.Where(Util.IsModActive))
             {
-                Debug.Log(String.Format("UnlimitedOutsideConnections: {0} is active", name));
-                return true;
+                Debug.Log($"UnlimitedOutsideConnections: {name} is active");
+                result = true;
             }
-            return false;
+            return result;
         }
 
         public override void OnLevelUnloading()
@@ -70,10 +62,9 @@ namespace UnlimitedOutsideConnections
             {
                 Debug.LogException(e);
             }
-
             try
             {
-                if (loadMode == LoadMode.NewGame || loadMode == LoadMode.LoadGame)
+                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
                     OutsideConnectionAIDetour.Revert();
                 }

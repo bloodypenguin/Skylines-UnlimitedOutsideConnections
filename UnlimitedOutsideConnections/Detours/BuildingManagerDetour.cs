@@ -2,8 +2,9 @@
 using System.Reflection;
 using System.Threading;
 using ColossalFramework;
+using UnlimitedOutsideConnections.Redirection;
 
-namespace UnlimitedOutsideConnections
+namespace UnlimitedOutsideConnections.Detours
 {
     public class BuildingManagerDetour : BuildingManager
     {
@@ -40,7 +41,7 @@ namespace UnlimitedOutsideConnections
         }
 
 
-        public void CalculateOutsideConnectionCount(ItemClass.Service service, ItemClass.SubService subService, out int incoming, out int outgoing)
+        public new void CalculateOutsideConnectionCount(ItemClass.Service service, ItemClass.SubService subService, out int incoming, out int outgoing)
         {
             do
                 ;
