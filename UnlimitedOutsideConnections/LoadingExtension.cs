@@ -42,7 +42,7 @@ namespace UnlimitedOutsideConnections
 
         private static bool IsBuildAnywherePluginActive()
         {
-            string[] buildAnywherePlugins = { "CrossTheLine", "81 Tile Unlock", "81 Tiles(Fixed for C:S 1.2 +)" };
+            string[] buildAnywherePlugins = { "CrossTheLine", "81 Tile Unlock", "81 Tiles (Fixed for C:S 1.2+)" };
             var result = false;
             foreach (var name in buildAnywherePlugins.Where(Util.IsModActive))
             {
