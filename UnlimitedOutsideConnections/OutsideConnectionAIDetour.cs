@@ -107,11 +107,8 @@ namespace UnlimitedOutsideConnections
                     gateIndex = randomizer.Int32((uint)ai.m_spawnPoints.Length);
                 }
                 instance.m_buildings.m_buffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
-                var args = new object[] { id, instance.m_buildings.m_buffer[id], buildingID, instance.m_buildings.m_buffer[buildingID], gateIndex };
-                _createConnectionLinesInfo.Invoke(ai, args);
-                instance.m_buildings.m_buffer[id] = (Building) args[1];
-                instance.m_buildings.m_buffer[buildingID] = (Building) args[3];
-                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], true);
+                CreateConnectionLines(ai, id, ref instance.m_buildings.m_buffer[id], buildingID, ref instance.m_buildings.m_buffer[buildingID], gateIndex);
+                ReleaseVehicles(ai, id, ref instance.m_buildings.m_buffer[id]);
             }
         }
 
@@ -155,49 +152,24 @@ namespace UnlimitedOutsideConnections
                     continue;
                 }
                 Debug.Log("UnlimitedOutsideConnections - Releasing vehicles of building " + id);
-                var args = new object[] {id, instance.m_buildings.m_buffer[id] };
-                _releaseVehiclesInfo.Invoke(ai, args);
-                instance.m_buildings.m_buffer[id] = (Building) args[1];
-
-                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], true);
-                OutsideConnectionAIDetour.RemoveVehicles(ref instance.m_buildings.m_buffer[id], false);
+                ReleaseVehicles(ai, id, ref instance.m_buildings.m_buffer[id]);
             }
         }
 
-
-
-        private static void RemoveVehicles(ref Building data, bool ownVehicles)
+        private static void CreateConnectionLines(TransportStationAI ai, ushort buildingID, ref Building data, ushort targetID,
+            ref Building target, int gateIndex)
         {
-            VehicleManager instance = Singleton<VehicleManager>.instance;
-            ushort vehicleID = ownVehicles? data.m_ownVehicles: data.m_guestVehicles;
-            int num = 0;
-            while ((int)vehicleID != 0)
-            {
-                if ((int)instance.m_vehicles.m_buffer[(int)vehicleID].m_transportLine == 0)
-                {
-                    VehicleInfo info = instance.m_vehicles.m_buffer[(int)vehicleID].Info;
-                    if (info.m_class.m_service == data.Info.m_class.m_service &&
-                        info.m_class.m_subService == data.Info.m_class.m_subService)
-                    {
-                        info.m_vehicleAI.SetTarget(vehicleID, ref instance.m_vehicles.m_buffer[(int)vehicleID], (ushort)0);
-                        if (ownVehicles)
-                        {
-                            data.RemoveOwnVehicle(vehicleID, ref instance.m_vehicles.m_buffer[(int) vehicleID]);
-                        }
-                        else
-                        {
-                            data.RemoveGuestVehicle(vehicleID, ref instance.m_vehicles.m_buffer[(int)vehicleID]);
-                        }
-                    }
+            var args = new object[] { buildingID, data, targetID, target, gateIndex };
+            _createConnectionLinesInfo.Invoke(ai, args);
+            data = (Building)args[1];
+            target = (Building)args[3];
+        }
 
-                }
-                vehicleID = instance.m_vehicles.m_buffer[(int)vehicleID].m_nextOwnVehicle;
-                if (++num > 16384)
-                {
-                    CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
-                    break;
-                }
-            }
+        private static void ReleaseVehicles(TransportStationAI ai, ushort buildingID, ref Building data)
+        {
+            var args = new object[] { buildingID, data };
+            _releaseVehiclesInfo.Invoke(ai, args);
+            data = (Building)args[1];
         }
     }
 }
