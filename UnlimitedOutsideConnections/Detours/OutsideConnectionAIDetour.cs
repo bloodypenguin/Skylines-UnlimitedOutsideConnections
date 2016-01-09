@@ -95,7 +95,7 @@ namespace UnlimitedOutsideConnections.Detours
             foreach (var id in serviceBuildings)
             {
                 var ai = instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
-                if (ai == null)
+                if (ai?.m_transportLineInfo == null)
                 {
                     continue;
                 }
