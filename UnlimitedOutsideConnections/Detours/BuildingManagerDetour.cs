@@ -3,9 +3,11 @@ using System.Reflection;
 using System.Threading;
 using ColossalFramework;
 using UnlimitedOutsideConnections.Redirection;
+using UnlimitedOutsideConnections.Redirection.Attributes;
 
 namespace UnlimitedOutsideConnections.Detours
 {
+    [TargetType(typeof(BuildingManager))]
     public class BuildingManagerDetour : BuildingManager
     {
         private static RedirectCallsState _state;
@@ -27,6 +29,7 @@ namespace UnlimitedOutsideConnections.Detours
                 _detourPtr = typeof(BuildingManagerDetour).GetMethod("CalculateOutsideConnectionCount", BindingFlags.Instance | BindingFlags.Public).MethodHandle.GetFunctionPointer();
             }
             _state = RedirectionHelper.PatchJumpTo(_originalPtr, _detourPtr);
+
             _deployed = true;
         }
 
@@ -40,7 +43,7 @@ namespace UnlimitedOutsideConnections.Detours
             _deployed = false;
         }
 
-
+        [RedirectMethod]
         public new void CalculateOutsideConnectionCount(ItemClass.Service service, ItemClass.SubService subService, out int incoming, out int outgoing)
         {
             do
@@ -49,8 +52,7 @@ namespace UnlimitedOutsideConnections.Detours
             try
             {
                 RedirectionHelper.RevertJumpTo(_originalPtr, _state);
-                Singleton<BuildingManager>.instance.CalculateOutsideConnectionCount(service, subService, out incoming,
-                    out outgoing);
+                Singleton<BuildingManager>.instance.CalculateOutsideConnectionCount(service, subService, out incoming, out outgoing);
                 if (incoming > 3)
                 {
                     incoming = 3;
@@ -59,10 +61,10 @@ namespace UnlimitedOutsideConnections.Detours
                 {
                     outgoing = 3;
                 }
-                RedirectionHelper.PatchJumpTo(_originalPtr, _detourPtr);
             }
             finally
             {
+                RedirectionHelper.PatchJumpTo(_originalPtr, _detourPtr);
                 Monitor.Exit(Lock);
             }
         }

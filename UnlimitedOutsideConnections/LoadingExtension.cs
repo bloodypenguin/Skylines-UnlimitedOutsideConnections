@@ -3,6 +3,7 @@ using System.Linq;
 using ICities;
 using UnityEngine;
 using UnlimitedOutsideConnections.Detours;
+using UnlimitedOutsideConnections.Redirection;
 
 namespace UnlimitedOutsideConnections
 {
@@ -10,8 +11,21 @@ namespace UnlimitedOutsideConnections
     {
         private static LoadMode _loadMode;
 
+        public override void OnCreated(ILoading loading)
+        {
+            base.OnCreated(loading);
+            Redirector<TransportStationAIDetour>.Deploy();
+        }
+
+        public override void OnReleased()
+        {
+            base.OnReleased();
+            Redirector<TransportStationAIDetour>.Revert();
+        }
+
         public override void OnLevelLoaded(LoadMode mode)
         {
+            base.OnLevelLoaded(mode);
             _loadMode = mode;
             try
             {
@@ -24,7 +38,7 @@ namespace UnlimitedOutsideConnections
                     if (IsBuildAnywherePluginActive())
                     {
                         BuildingManagerDetour.Deploy();
-                        OutsideConnectionAIDetour.Deploy();
+                        Redirector<OutsideConnectionAIDetour>.Deploy();
                     }
                 }
                 GameObject gameObjectWithTag = GameObject.FindGameObjectWithTag("MainCamera");
@@ -42,11 +56,19 @@ namespace UnlimitedOutsideConnections
 
         private static bool IsBuildAnywherePluginActive()
         {
-            string[] buildAnywherePlugins = { "CrossTheLine", "81 Tile Unlock", "81 Tiles (Fixed for C:S 1.2+)" };
             var result = false;
-            foreach (var name in buildAnywherePlugins.Where(Util.IsModActive))
+            try
             {
-                Debug.Log($"UnlimitedOutsideConnections: {name} is active");
+                string[] buildAnywherePlugins = {"CrossTheLine", "81 Tile Unlock", "81 Tiles (Fixed for C:S 1.2+)"};
+
+                foreach (var name in buildAnywherePlugins.Where(Util.IsModActive))
+                {
+                    Debug.Log($"UnlimitedOutsideConnections: {name} is active");
+                    result = true;
+                }
+            }
+            catch
+            {
                 result = true;
             }
             return result;
@@ -54,6 +76,7 @@ namespace UnlimitedOutsideConnections
 
         public override void OnLevelUnloading()
         {
+            base.OnLevelUnloading();
             try
             {
                 BuildingManagerDetour.Revert();
@@ -66,7 +89,7 @@ namespace UnlimitedOutsideConnections
             {
                 if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
-                    OutsideConnectionAIDetour.Revert();
+                    Redirector<OutsideConnectionAIDetour>.Revert();
                 }
             }
             catch (Exception e)
