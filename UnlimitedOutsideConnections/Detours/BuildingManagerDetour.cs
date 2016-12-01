@@ -19,7 +19,10 @@ namespace UnlimitedOutsideConnections.Detours
 
         public static void Deploy()
         {
-            if (_deployed) return;
+            if (_deployed)
+            {
+                return;
+            }
             if (_originalPtr == IntPtr.Zero)
             {
                 _originalPtr = typeof(BuildingManager).GetMethod("CalculateOutsideConnectionCount", BindingFlags.Instance | BindingFlags.Public).MethodHandle.GetFunctionPointer();
@@ -35,7 +38,10 @@ namespace UnlimitedOutsideConnections.Detours
 
         public static void Revert()
         {
-            if (!_deployed) return;
+            if (!_deployed)
+            {
+                return;
+            }
             if (_originalPtr != IntPtr.Zero && _detourPtr != IntPtr.Zero)
             {
                 RedirectionHelper.RevertJumpTo(_originalPtr, _state);
@@ -52,7 +58,7 @@ namespace UnlimitedOutsideConnections.Detours
             try
             {
                 RedirectionHelper.RevertJumpTo(_originalPtr, _state);
-                Singleton<BuildingManager>.instance.CalculateOutsideConnectionCount(service, subService, out incoming, out outgoing);
+                instance.CalculateOutsideConnectionCount(service, subService, out incoming, out outgoing); //called like that to prevent stack overflow
                 if (incoming > 3)
                 {
                     incoming = 3;

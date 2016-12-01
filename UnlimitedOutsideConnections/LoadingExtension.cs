@@ -35,18 +35,13 @@ namespace UnlimitedOutsideConnections
                 }
                 else if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
-                    if (IsBuildAnywherePluginActive())
+                    if (!IsBuildAnywherePluginActive())
                     {
-                        BuildingManagerDetour.Deploy();
-                        Redirector<OutsideConnectionAIDetour>.Deploy();
+                        return;
                     }
+                    BuildingManagerDetour.Deploy();
+                    BuildingManagerHooks.Deploy();
                 }
-                GameObject gameObjectWithTag = GameObject.FindGameObjectWithTag("MainCamera");
-                if (!((gameObjectWithTag != null)))
-                    return;
-                var cameraController = gameObjectWithTag.GetComponent<CameraController>();
-                cameraController.m_unlimitedCamera = true;
-
             }
             catch (Exception e)
             {
@@ -89,7 +84,7 @@ namespace UnlimitedOutsideConnections
             {
                 if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
-                    Redirector<OutsideConnectionAIDetour>.Revert();
+                    BuildingManagerHooks.Revert();
                 }
             }
             catch (Exception e)
