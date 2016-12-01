@@ -64,7 +64,7 @@
     <Compile Include="Redirection\RedirectionUtil.cs" />
     <Compile Include="Redirection\Redirector.cs" />
     <Compile Include="Redirection\Tuple.cs" />
-    <Compile Include="ServiceUtil.cs" />
+    <Compile Include="BuildingUtil.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup />

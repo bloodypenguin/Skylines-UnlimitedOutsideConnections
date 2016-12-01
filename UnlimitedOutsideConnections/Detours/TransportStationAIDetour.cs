@@ -10,11 +10,5 @@ namespace UnlimitedOutsideConnections.Detours
         {
             UnityEngine.Debug.LogError($"UnlimitedOutsideConnections - TransportStationAIDetour - failed to detour CreateConnectionLines");
         }
-
-        [RedirectReverse]
-        public static void ReleaseVehicles(TransportStationAI ai, ushort buildingID, ref Building data)
-        {
-            UnityEngine.Debug.LogError($"UnlimitedOutsideConnections - TransportStationAIDetour - failed to detour ReleaseVehicles");
-        }
     }
 }

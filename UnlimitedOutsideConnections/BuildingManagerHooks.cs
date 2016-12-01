@@ -25,7 +25,7 @@ namespace UnlimitedOutsideConnections
             Debug.Log($"UnlimitedOutsideConnections - OnBuildingCreated. buildingID={buildingID}");
 #endif
             var instance = BuildingManager.instance;
-            var serviceBuildings = ServiceUtil.FindServiceBuildings(buildingID);
+            var serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);
             foreach (var id in serviceBuildings)
             {
                 var ai = instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
@@ -41,7 +41,7 @@ namespace UnlimitedOutsideConnections
                 }
                 instance.m_buildings.m_buffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
                 TransportStationAIDetour.CreateConnectionLines(ai, id, ref instance.m_buildings.m_buffer[id], buildingID, ref instance.m_buildings.m_buffer[buildingID], gateIndex);
-                TransportStationAIDetour.ReleaseVehicles(ai, id, ref instance.m_buildings.m_buffer[id]);
+                BuildingUtil.ReleaseOwnVehicles(id);
             }
         }
 
@@ -50,7 +50,14 @@ namespace UnlimitedOutsideConnections
 #if DEBUG
             Debug.Log($"UnlimitedOutsideConnections - OnBuildingReleased. buildingID={buildingID}");
 #endif
-            var serviceBuildings = ServiceUtil.FindServiceBuildings(buildingID);
+            var data = BuildingManager.instance.m_buildings.m_buffer[buildingID];
+            var buildingInfo = data.Info;
+            var connectionAi = buildingInfo?.m_buildingAI as OutsideConnectionAI;
+            if (connectionAi != null)
+            {
+                BuildingUtil.ReleaseOwnVehicles(buildingID);
+            }
+            var serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);
             foreach (var id in serviceBuildings)
             {
                 var ai = Singleton<BuildingManager>.instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
@@ -58,7 +65,7 @@ namespace UnlimitedOutsideConnections
                 {
                     continue;
                 }
-                TransportStationAIDetour.ReleaseVehicles(ai, id, ref Singleton<BuildingManager>.instance.m_buildings.m_buffer[id]);
+                BuildingUtil.ReleaseOwnVehicles(id);
             }
         }
     }
