@@ -41,6 +41,20 @@ namespace UnlimitedOutsideConnections
                     }
                     BuildingManagerDetour.Deploy();
                     BuildingManagerHooks.Deploy();
+                    var highway = PrefabCollection<NetInfo>.FindLoaded("Highway");
+                    for (uint i = 0; i < PrefabCollection<NetInfo>.LoadedCount(); i++)
+                    {
+                        var info = PrefabCollection<NetInfo>.GetLoaded(i);
+                        var roadAi = info?.m_netAI as RoadBaseAI;
+                        if (roadAi == null)
+                        {
+                            continue;
+                        }
+                        if (roadAi.m_outsideConnection == null)
+                        {
+                            roadAi.m_outsideConnection = ((RoadBaseAI) highway.m_netAI).m_outsideConnection;
+                        }
+                    }
                 }
             }
             catch (Exception e)
