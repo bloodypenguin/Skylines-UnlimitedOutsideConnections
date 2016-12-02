@@ -22,9 +22,14 @@ namespace UnlimitedOutsideConnections
         public static void OnBuildingCreated(ushort buildingID)
         {
 #if DEBUG
-            Debug.Log($"UnlimitedOutsideConnections - OnBuildingCreated. buildingID={buildingID}");
+            UnityEngine.Debug.Log($"UnlimitedOutsideConnections - OnBuildingCreated. buildingID={buildingID}");
 #endif
             var instance = BuildingManager.instance;
+            var connectionAi = instance.m_buildings.m_buffer[buildingID].Info?.m_buildingAI as OutsideConnectionAI;
+            if (connectionAi == null)
+            {
+                return;
+            }
             var serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);
             foreach (var id in serviceBuildings)
             {
@@ -48,25 +53,25 @@ namespace UnlimitedOutsideConnections
         public static void OnBuildingReleased(ushort buildingID)
         {
 #if DEBUG
-            Debug.Log($"UnlimitedOutsideConnections - OnBuildingReleased. buildingID={buildingID}");
+            UnityEngine.Debug.Log($"UnlimitedOutsideConnections - OnBuildingReleased. buildingID={buildingID}");
 #endif
-            var data = BuildingManager.instance.m_buildings.m_buffer[buildingID];
-            var buildingInfo = data.Info;
-            var connectionAi = buildingInfo?.m_buildingAI as OutsideConnectionAI;
-            if (connectionAi != null)
+            var instance = BuildingManager.instance;
+            var connectionAi = instance.m_buildings.m_buffer[buildingID].Info?.m_buildingAI as OutsideConnectionAI;
+            if (connectionAi == null)
             {
-                BuildingUtil.ReleaseOwnVehicles(buildingID);
+                return;
             }
             var serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);
             foreach (var id in serviceBuildings)
             {
-                var ai = Singleton<BuildingManager>.instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
+                var ai = instance.m_buildings.m_buffer[id].Info.GetAI() as TransportStationAI;
                 if (ai == null)
                 {
                     continue;
                 }
                 BuildingUtil.ReleaseOwnVehicles(id);
             }
+            BuildingUtil.ReleaseTargetedVehicles(buildingID);
         }
     }
 }

@@ -36,6 +36,30 @@ namespace UnlimitedOutsideConnections
             return subServiceBuildings;
         }
 
+        public static void ReleaseTargetedVehicles(ushort buildingID)
+        {
+            if (buildingID < 1)
+            {
+                return;
+            }
+            var ai = BuildingManager.instance.m_buildings.m_buffer[buildingID].Info?.m_buildingAI;
+            if (ai == null)
+            {
+                return;
+            }
+
+            var instance = Singleton<VehicleManager>.instance;
+            for (ushort i = 1; i < instance.m_vehicles.m_size; i++)
+            {
+                if (instance.m_vehicles.m_buffer[i].m_sourceBuilding == buildingID ||
+                    instance.m_vehicles.m_buffer[i].m_targetBuilding == buildingID)
+                {
+                    instance.ReleaseVehicle(i);
+                }
+            }
+
+        }
+
         public static void ReleaseOwnVehicles(ushort buildingID)
         {
             if (buildingID < 1)
