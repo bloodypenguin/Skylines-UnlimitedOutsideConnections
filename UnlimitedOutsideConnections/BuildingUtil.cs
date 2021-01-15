@@ -49,7 +49,9 @@ namespace UnlimitedOutsideConnections
             }
 
             var instance = Singleton<VehicleManager>.instance;
-            for (ushort i = 1; i < instance.m_vehicles.m_size; i++)
+            uint maxCount = System.Math.Min(instance.m_vehicles.m_size, 65535);
+
+            for (ushort i = 1; i < maxCount; i++)
             {
                 if (instance.m_vehicles.m_buffer[i].m_sourceBuilding == buildingID ||
                     instance.m_vehicles.m_buffer[i].m_targetBuilding == buildingID)
