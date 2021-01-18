@@ -1,6 +1,5 @@
-﻿using ColossalFramework;
-using ColossalFramework.Math;
-using UnlimitedOutsideConnections.Detours;
+﻿using ColossalFramework.Math;
+using UnlimitedOutsideConnections.Patches;
 
 namespace UnlimitedOutsideConnections
 {
@@ -45,7 +44,7 @@ namespace UnlimitedOutsideConnections
                     gateIndex = randomizer.Int32((uint)ai.m_spawnPoints.Length);
                 }
                 instance.m_buildings.m_buffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
-                TransportStationAIDetour.CreateConnectionLines(ai, id, ref instance.m_buildings.m_buffer[id], buildingID, ref instance.m_buildings.m_buffer[buildingID], gateIndex);
+                TransportStationAIPatch.CreateConnectionLines(ai, id, ref instance.m_buildings.m_buffer[id], buildingID, ref instance.m_buildings.m_buffer[buildingID], gateIndex);
                 BuildingUtil.ReleaseOwnVehicles(id);
             }
         }

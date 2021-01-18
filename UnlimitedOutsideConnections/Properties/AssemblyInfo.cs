@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("UnlimitedOutsideConnections")]
+[assembly: AssemblyTitle("Unlimited Outside Connections Revisited")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("UnlimitedOutsideConnections")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("Unlimited Outside Connections Revisited")]
+[assembly: AssemblyCopyright("Copyright ©  2015 BloodyPenguin, 2021 algernon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
