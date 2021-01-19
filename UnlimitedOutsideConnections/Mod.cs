@@ -4,6 +4,9 @@ using CitiesHarmony.API;
 
 namespace UnlimitedOutsideConnections
 {
+    /// <summary>
+    /// The base mod class for instantiation by the game.
+    /// </summary>
     public class UOCRMod : IUserMod
     {
         // Public mod name and description.
