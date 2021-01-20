@@ -1,0 +1,5 @@
+﻿Changes from original BP mod
+
+- Convert from Detours to Harmony
+- Fix compatibility with More Vehicles mod
+- Code cleanup and anootation
