@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using ColossalFramework;
 using ColossalFramework.Math;
-using UnlimitedOutsideConnections.Patches;
+using UOCRevisited.Patches;
 
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     /// <summary>
     /// Event hooks for the building manager.

@@ -2,7 +2,7 @@
 using CitiesHarmony.API;
 
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     /// <summary>
     /// The base mod class for instantiation by the game.

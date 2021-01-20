@@ -7,8 +7,8 @@
     <ProjectGuid>{A1D7207D-1E7D-4DC4-ABA7-B55B00917FAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnlimitedOutsideConnections</RootNamespace>
-    <AssemblyName>UnlimitedOutsideConnections</AssemblyName>
+    <RootNamespace>UOCRevisited</RootNamespace>
+    <AssemblyName>UnlimitedOutsideConnectionsRevisited</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -34,13 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.1\lib\net35\0Harmony.dll</HintPath>
+      <HintPath>packages\Lib.Harmony.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Skylines-ControlBuildingLevelUpMod\CitiesDLLs\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="CitiesHarmony.API, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CitiesHarmony.API.1.0.5\lib\net35\CitiesHarmony.API.dll</HintPath>
+      <HintPath>packages\CitiesHarmony.API.1.0.5\lib\net35\CitiesHarmony.API.dll</HintPath>
     </Reference>
     <Reference Include="ColossalManaged">
       <HintPath>..\..\..\..\..\Games\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\ColossalManaged.dll</HintPath>
@@ -66,12 +66,12 @@
     <Compile Include="Code\Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Code\packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Changelog.txt" />
     <Content Include="Images\PreviewImage.png" />
     <Content Include="License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

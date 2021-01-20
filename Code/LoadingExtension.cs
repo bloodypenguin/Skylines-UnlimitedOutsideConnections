@@ -3,7 +3,7 @@ using System.Linq;
 using ICities;
 using UnityEngine;
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     public class LoadingExtension : LoadingExtensionBase
     {

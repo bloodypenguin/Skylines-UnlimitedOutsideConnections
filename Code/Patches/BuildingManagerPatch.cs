@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace UnlimitedOutsideConnections.Patches
+namespace UOCRevisited.Patches
 {
     /// <summary>
     /// Harmony Postfix patch for BuildingManager.CalculateOutsideConnectionCount.

@@ -2,7 +2,7 @@
 using CitiesHarmony.API;
 
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     /// <summary>
     /// Class to manage the mod's Harmony patches.

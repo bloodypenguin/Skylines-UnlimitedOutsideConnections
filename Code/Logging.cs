@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     /// <summary>
     /// Logging utility class.

@@ -2,7 +2,7 @@
 using HarmonyLib;
 
 
-namespace UnlimitedOutsideConnections.Patches
+namespace UOCRevisited.Patches
 {
     /// <summary>
     /// Harmony reverse patch to access TransportStationAI.CreateConnectionLines (private method).

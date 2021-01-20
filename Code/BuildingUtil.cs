@@ -2,7 +2,7 @@
 using System.Linq;
 using ColossalFramework;
 
-namespace UnlimitedOutsideConnections
+namespace UOCRevisited
 {
     public static class BuildingUtil
     {
