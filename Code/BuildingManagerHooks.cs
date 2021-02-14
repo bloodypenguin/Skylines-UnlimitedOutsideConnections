@@ -57,32 +57,26 @@ namespace UOCRevisited
             Logging.Message("found building ", buildingID.ToString(), " with outside connection AI");
 
             // Find all service buildings in map and iterate through.
+            Building[] buildingBuffer = instance.m_buildings.m_buffer;
             IEnumerable<ushort> serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);
             foreach (ushort serviceID in serviceBuildings)
             {
                 // Check if this building has transport line info.
-                TransportStationAI stationAI = instance.m_buildings.m_buffer[serviceID].Info.GetAI() as TransportStationAI;
-                if (stationAI?.m_transportLineInfo == null)
+                if (buildingBuffer[buildingID].Info.GetAI() is TransportStationAI stationAI)
                 {
-                    // No transport line info - skip to next building.
-                    continue;
+                    if (stationAI.m_transportLineInfo == null || (buildingBuffer[buildingID].m_flags & Building.Flags.Downgrading) != 0)
+                    {
+                        // No transport line info or building is downgrading - CreateConnectionLines will return without doing anything, so just skip to next building.
+                        continue;
+                    }
+
+                    // Create connection line to/from new outside connection.
+                    buildingBuffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
+                    TransportStationAIPatch.CreateConnectionLines(stationAI, buildingID, ref buildingBuffer[buildingID]);
+
+                    // Release building's existing service vehicles.
+                    BuildingUtil.ReleaseOwnVehicles(serviceID);
                 }
-
-                // Transport line building - need to update it to include the new connection.
-                int gateIndex = 0;
-
-                // Randomize spawnpoint for buildings with multiple spawnpoints.
-                if (stationAI.m_spawnPoints != null && stationAI.m_spawnPoints.Length != 0)
-                {
-                    gateIndex = new Randomizer(serviceID).Int32((uint)stationAI.m_spawnPoints.Length);
-                }
-
-                // Create connection line to/from new outside connection.
-                instance.m_buildings.m_buffer[buildingID].m_flags |= Building.Flags.IncomingOutgoing;
-                TransportStationAIPatch.CreateConnectionLines(stationAI, serviceID, ref instance.m_buildings.m_buffer[serviceID], buildingID, ref instance.m_buildings.m_buffer[buildingID], gateIndex);
-
-                // Release building's existing service vehicles.
-                BuildingUtil.ReleaseOwnVehicles(serviceID);
             }
         }
 

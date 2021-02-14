@@ -1,5 +1,9 @@
 ﻿using HarmonyLib;
 
+
+#pragma warning disable IDE0060 // Remove unused parameter
+
+
 namespace UOCRevisited.Patches
 {
     /// <summary>
@@ -29,3 +33,5 @@ namespace UOCRevisited.Patches
         }
     }
 }
+
+#pragma warning restore IDE0060 // Remove unused parameter
