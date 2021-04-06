@@ -17,8 +17,8 @@ namespace UOCRevisited
         // Internal and private name and version components.
         internal static string ModName => "Unlimited Outside Connections Revisited";
         internal static string Version => BaseVersion + " " + Beta;
-        internal static string Beta => "BETA 2";
-        private static string BaseVersion => "1.0";
+        internal static string Beta => "";
+        private static string BaseVersion => "1.0.1";
 
 
         /// <summary>
