@@ -1,39 +1,60 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ColossalFramework;
+
 
 namespace UOCRevisited
 {
     public static class BuildingUtil
     {
+        /// <summary>
+        /// Returns a list of all service buildings matching the specified outside connection.
+        /// </summary>
+        /// <param name="connectionBuildingID"></param>
+        /// <returns>New list of service buildings (empty list if none)</returns>
         public static IEnumerable<ushort> FindServiceBuildings(uint connectionBuildingID)
         {
-            if (connectionBuildingID < 1)
+            // Return list.
+            List<ushort> buildingList = new List<ushort>();
+
+            // Need valid building ID.
+            if (connectionBuildingID == 0)
             {
-                return new List<ushort>();
+                // Invalid building ID - return empty list.
+                return buildingList;
             }
-            var info = BuildingManager.instance.m_buildings.m_buffer[connectionBuildingID].Info;
-            var ai = info?.m_buildingAI as OutsideConnectionAI;
-            if(ai == null || info.m_class.m_service != ItemClass.Service.PublicTransport) { 
-                return new List<ushort>();
-            }
-            var instance = BuildingManager.instance;
-            var allServiceBuildings = instance.GetServiceBuildings(ItemClass.Service.PublicTransport);
-            if (allServiceBuildings == null)
+
+            // Local references.
+            BuildingManager buildingManager = Singleton<BuildingManager>.instance;
+            Building[] buildingBuffer = buildingManager.m_buildings.m_buffer;
+            BuildingInfo buildingInfo = buildingBuffer[connectionBuildingID].Info;
+            OutsideConnectionAI connectionAI = buildingInfo?.GetAI() as OutsideConnectionAI;
+
+            // Make sure this is an outside connection building with the PublicTransport service.
+            if (connectionAI == null || buildingInfo.GetService() != ItemClass.Service.PublicTransport)
             {
-                return new List<ushort>();
+                // Not a valid connection - return empty list.
+                return buildingList;
             }
-            var subServiceBuildings = allServiceBuildings.ToArray().Where(
-                id =>
+
+            // Get all current public transport service buildings.
+            FastList<ushort> serviceBuildings = buildingManager.GetServiceBuildings(ItemClass.Service.PublicTransport);
+            if (serviceBuildings == null || serviceBuildings.m_size == 0)
+            {
+                // No public transport buildings - return empty list.
+                return buildingList;
+            }
+
+            // Iterate through each public transport building, looking for a subservice match with this one.
+            ItemClass.SubService subService = buildingInfo.GetSubService();
+            foreach (ushort buildingID in serviceBuildings)
+            {
+                if (buildingBuffer[buildingID].m_flags != Building.Flags.None && buildingBuffer[buildingID].Info != null && buildingBuffer[buildingID].Info.GetSubService() == subService)
                 {
-                    var building = instance.m_buildings.m_buffer[id];
-                    if (building.m_flags == Building.Flags.None || building.Info == null)
-                    {
-                        return false;
-                    }
-                    return building.Info.m_class.m_subService == info.m_class.m_subService;
-                }).ToArray();
-            return subServiceBuildings;
+                    buildingList.Add(buildingID);
+                }
+            }
+
+            return buildingList;
         }
 
         public static void ReleaseTargetedVehicles(ushort buildingID)

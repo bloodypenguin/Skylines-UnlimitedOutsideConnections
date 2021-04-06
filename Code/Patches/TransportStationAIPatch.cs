@@ -1,8 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
-
-
-#pragma warning disable IDE0060 // Remove unused parameter
 
 
 namespace UOCRevisited.Patches
@@ -17,13 +15,12 @@ namespace UOCRevisited.Patches
         [HarmonyPatch((typeof(TransportStationAI)), "CreateConnectionLines")]
         [HarmonyPatch(new Type[] { typeof(ushort), typeof(Building) },
             new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref })]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void CreateConnectionLines(TransportStationAI ai, ushort buildingID, ref Building data)
         {
             string message = "TransportStationAI.CreateConnectionLines reverse Harmony patch wasn't applied";
-            Logging.Error(message);
+            Logging.Error(message, ai.ToString(), buildingID.ToString(), data.ToString());
             throw new NotImplementedException(message);
         }
     }
 }
-
-#pragma warning restore IDE0060 // Remove unused parameter
