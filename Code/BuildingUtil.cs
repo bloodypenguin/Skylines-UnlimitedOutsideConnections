@@ -45,10 +45,14 @@ namespace UOCRevisited
             }
 
             // Iterate through each public transport building, looking for a subservice match with this one.
+            ItemClass.Service service = buildingInfo.GetService();
             ItemClass.SubService subService = buildingInfo.GetSubService();
             foreach (ushort buildingID in serviceBuildings)
             {
-                if (buildingBuffer[buildingID].m_flags != Building.Flags.None && buildingBuffer[buildingID].Info != null && buildingBuffer[buildingID].Info.GetSubService() == subService)
+                BuildingInfo serviceInfo = buildingBuffer[buildingID].Info;
+
+                // Note that intercity bus routes need to match to roads (no direct subservice match).
+                if (buildingBuffer[buildingID].m_flags != Building.Flags.None && serviceInfo != null && ((service == ItemClass.Service.Road && serviceInfo.GetSubService() == ItemClass.SubService.PublicTransportBus) || serviceInfo.GetSubService() == subService))
                 {
                     buildingList.Add(buildingID);
                 }
