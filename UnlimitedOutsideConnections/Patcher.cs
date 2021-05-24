@@ -1,8 +1,7 @@
-﻿using HarmonyLib;
 using CitiesHarmony.API;
+using HarmonyLib;
 
-
-namespace UOCRevisited
+namespace UnlimitedOutsideConnections
 {
     /// <summary>
     /// Class to manage the mod's Harmony patches.
@@ -10,7 +9,7 @@ namespace UOCRevisited
     public static class Patcher
     {
         // Unique harmony identifier.
-        private const string harmonyID = "com.github.algernon-A.csl.unlimitedoutsideconnections";
+        private const string HarmonyId = "github.com/bloodypenguin/Skylines-UnlimitedOutsideConnections";
 
         // Flag.
         internal static bool Patched => _patched;
@@ -28,16 +27,10 @@ namespace UOCRevisited
                 // Ensure Harmony is ready before patching.
                 if (HarmonyHelper.IsHarmonyInstalled)
                 {
-                    Logging.KeyMessage("deploying Harmony patches");
-
                     // Apply all annotated patches and update flag.
-                    Harmony harmonyInstance = new Harmony(harmonyID);
+                    Harmony harmonyInstance = new Harmony(HarmonyId);
                     harmonyInstance.PatchAll();
                     _patched = true;
-                }
-                else
-                {
-                    Logging.Error("Harmony not ready");
                 }
             }
         }
@@ -48,11 +41,9 @@ namespace UOCRevisited
             // Only unapply if patches appplied.
             if (_patched)
             {
-                Logging.KeyMessage("reverting Harmony patches");
-
                 // Unapply patches, but only with our HarmonyID.
-                Harmony harmonyInstance = new Harmony(harmonyID);
-                harmonyInstance.UnpatchAll(harmonyID);
+                Harmony harmonyInstance = new Harmony(HarmonyId);
+                harmonyInstance.UnpatchAll(HarmonyId);
                 _patched = false;
             }
         }

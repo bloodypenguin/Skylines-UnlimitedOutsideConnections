@@ -1,9 +1,8 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlimitedOutsideConnectionsRevisited", "UnlimitedOutsideConnectionsRevisited.csproj", "{A1D7207D-1E7D-4DC4-ABA7-B55B00917FAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlimitedOutsideConnections", "UnlimitedOutsideConnections\UnlimitedOutsideConnections.csproj", "{A1D7207D-1E7D-4DC4-ABA7-B55B00917FAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,8 +17,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {73FF53EA-7885-4CEB-8F4D-536BB61B1587}
 	EndGlobalSection
 EndGlobal

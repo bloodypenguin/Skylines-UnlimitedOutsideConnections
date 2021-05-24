@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using ColossalFramework;
 using ColossalFramework.Math;
-using UOCRevisited.Patches;
+using UnlimitedOutsideConnections.Patches;
 
 
-namespace UOCRevisited
+namespace UnlimitedOutsideConnections
 {
     /// <summary>
     /// Event hooks for the building manager.
@@ -54,7 +54,6 @@ namespace UOCRevisited
             }
 
             // Yes - this is an outside connection.
-            Logging.Message("found building ", buildingID.ToString(), " with outside connection AI");
 
             // Find all service buildings in map and iterate through.
             Building[] buildingBuffer = instance.m_buildings.m_buffer;
@@ -100,7 +99,6 @@ namespace UOCRevisited
             }
 
             // Yes - this is an outside connection.
-            Logging.Message("found building ", buildingID.ToString(), " with outside connection AI");
 
             // Find all service buildings in map and iterate through.
             IEnumerable<ushort> serviceBuildings = BuildingUtil.FindServiceBuildings(buildingID);

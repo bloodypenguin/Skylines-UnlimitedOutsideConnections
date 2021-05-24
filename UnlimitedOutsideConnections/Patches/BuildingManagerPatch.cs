@@ -4,7 +4,7 @@
 #pragma warning disable IDE0060 // Remove unused parameter
 
 
-namespace UOCRevisited.Patches
+namespace UnlimitedOutsideConnections.Patches
 {
     /// <summary>
     /// Harmony Postfix patch for BuildingManager.CalculateOutsideConnectionCount.

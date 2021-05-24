@@ -2,7 +2,7 @@
 using ColossalFramework.Plugins;
 using ICities;
 
-namespace UOCRevisited
+namespace UnlimitedOutsideConnections
 {
     public static class Util
     {

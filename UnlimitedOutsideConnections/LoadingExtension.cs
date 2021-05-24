@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using CitiesHarmony.API;
 using ICities;
 using UnityEngine;
 
-namespace UOCRevisited
+namespace UnlimitedOutsideConnections
 {
     public class LoadingExtension : LoadingExtensionBase
     {
@@ -16,16 +17,13 @@ namespace UOCRevisited
             _loadMode = mode;
             try
             {
-                if (mode == LoadMode.LoadMap || mode == LoadMode.NewMap)
-                {
-                }
-                else if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame || _loadMode == LoadMode.NewGameFromScenario)
+                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame || _loadMode == LoadMode.NewGameFromScenario)
                 {
                     if (!IsBuildAnywherePluginActive())
                     {
-                        Patcher.UnpatchAll();
                         return;
                     }
+                    Patcher.PatchAll();
                     BuildingManagerHooks.Deploy();
                 }
             }
@@ -61,6 +59,11 @@ namespace UOCRevisited
             {
                 if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
                 {
+                    if (!HarmonyHelper.IsHarmonyInstalled)
+                    {
+                        return;
+                    }
+                    Patcher.UnpatchAll();
                     BuildingManagerHooks.Revert();
                 }
             }
