@@ -6,7 +6,7 @@ namespace UnlimitedOutsideConnections
     /// <summary>
     /// Class to manage the mod's Harmony patches.
     /// </summary>
-    public static class Patcher
+    internal static class Patcher
     {
         // Unique harmony identifier.
         private const string HarmonyId = "github.com/bloodypenguin/Skylines-UnlimitedOutsideConnections";

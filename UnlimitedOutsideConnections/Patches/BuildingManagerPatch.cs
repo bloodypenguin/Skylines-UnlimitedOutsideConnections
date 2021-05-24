@@ -11,7 +11,7 @@ namespace UnlimitedOutsideConnections.Patches
     /// </summary>
     [HarmonyPatch(typeof(BuildingManager))]
     [HarmonyPatch("CalculateOutsideConnectionCount")]
-    public static class CalculateOutsideConnectionCountPatch
+    internal static class CalculateOutsideConnectionCountPatch
     {
         /// <summary>
 		/// Harmony Postfix patch for BuildingManager.CalculateOutsideConnectionCount to make sure 'incoming' and 'outgoing' args are capped at 3.

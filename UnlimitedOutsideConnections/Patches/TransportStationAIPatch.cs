@@ -9,7 +9,7 @@ namespace UnlimitedOutsideConnections.Patches
     /// Harmony reverse patch to access TransportStationAI.CreateConnectionLines (private method).
     /// </summary>
     [HarmonyPatch]
-    public class TransportStationAIPatch //serves only for accessing TransportStationAI's private methods
+    internal class TransportStationAIPatch //serves only for accessing TransportStationAI's private methods
     {
         [HarmonyReversePatch]
         [HarmonyPatch((typeof(TransportStationAI)), "CreateConnectionLines")]
