@@ -17,9 +17,9 @@ namespace UnlimitedOutsideConnections
             _loadMode = mode;
             try
             {
-                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame || _loadMode == LoadMode.NewGameFromScenario || _loadMode == LoadMode.NewMap || _loadMode == LoadMode.LoadMap)
+                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame || _loadMode == LoadMode.NewGameFromScenario)
                 {
-                    if (_loadMode != LoadMode.NewMap && _loadMode != LoadMode.LoadMap && !IsBuildAnywherePluginActive())
+                    if (!IsBuildAnywherePluginActive())
                     {
                         return;
                     }
