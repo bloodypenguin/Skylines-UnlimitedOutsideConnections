@@ -57,7 +57,7 @@ namespace UnlimitedOutsideConnections
         {
             try
             {
-                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame)
+                if (_loadMode == LoadMode.NewGame || _loadMode == LoadMode.LoadGame || _loadMode == LoadMode.NewGameFromScenario)
                 {
                     if (!HarmonyHelper.IsHarmonyInstalled)
                     {
